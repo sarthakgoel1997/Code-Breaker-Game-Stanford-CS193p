@@ -17,14 +17,18 @@ struct MatchMarkers: View {
     var matches: [Match]
     
     var body: some View {
-        HStack {
-            VStack {
-                matchMarker(peg: 0)
-                matchMarker(peg: 1)
+        let mid = (matches.count + 1) / 2
+        
+        VStack(alignment: .leading) {
+            HStack {
+                ForEach(matches[..<mid].indices, id: \.self) { index in
+                    matchMarker(peg: index)
+                }
             }
-            VStack {
-                matchMarker(peg: 2)
-                matchMarker(peg: 3)
+            HStack {
+                ForEach(matches[mid...].indices, id: \.self) { index in
+                    matchMarker(peg: index)
+                }
             }
         }
     }
@@ -40,6 +44,57 @@ struct MatchMarkers: View {
     }
 }
 
+struct MatchMarkersPreview: View {
+    var matches: [Match]
+    
+    var body: some View {
+        HStack {
+            ForEach(matches, id: \.self) { index in
+                RoundedRectangle(cornerRadius: 10)
+                    .aspectRatio(1, contentMode: .fit)
+            }
+            
+            MatchMarkers(matches: matches)
+        }
+    }
+}
+
 #Preview {
-    MatchMarkers(matches: [.exact, .inexact, .nomatch])
+    VStack(alignment: .leading) {
+        MatchMarkersPreview(matches: [.exact, .inexact, .inexact])
+            .frame(height: 42)
+            .padding()
+        
+        MatchMarkersPreview(matches: [.exact, .nomatch, .nomatch])
+            .frame(height: 42)
+            .padding()
+        
+        MatchMarkersPreview(matches: [.exact, .inexact, .inexact, .exact])
+            .frame(height: 42)
+            .padding()
+        
+        MatchMarkersPreview(matches: [.exact, .inexact, .nomatch, .exact])
+            .frame(height: 42)
+            .padding()
+        
+        MatchMarkersPreview(matches: [.exact, .inexact, .nomatch, .nomatch])
+            .frame(height: 42)
+            .padding()
+        
+        MatchMarkersPreview(matches: [.exact, .inexact, .inexact, .exact, .inexact])
+            .frame(height: 42)
+            .padding()
+        
+        MatchMarkersPreview(matches: [.exact, .inexact, .inexact, .nomatch, .nomatch])
+            .frame(height: 42)
+            .padding()
+        
+        MatchMarkersPreview(matches: [.exact, .exact, .exact, .nomatch, .inexact])
+            .frame(height: 42)
+            .padding()
+        
+        MatchMarkersPreview(matches: [.exact, .inexact, .inexact, .exact, .exact, .inexact])
+            .frame(height: 42)
+            .padding()
+    }
 }
