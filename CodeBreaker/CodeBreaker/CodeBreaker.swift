@@ -22,9 +22,35 @@ struct CodeBreaker {
     }
     
     mutating func attemptGuess() {
+        if emptyAttempt() || attemptAlreadyMade() {
+            return
+        }
+        
         var attempt = guess
         attempt.kind = .attempt(guess.match(against: masterCode))
         attempts.append(attempt)
+    }
+    
+    func emptyAttempt() -> Bool {
+        for index in guess.pegs.indices {
+            if guess.pegs[index] != Code.missing {
+                break
+            }
+            
+            if(index == guess.pegs.count - 1) {
+                return true
+            }
+        }
+        return false
+    }
+    
+    func attemptAlreadyMade() -> Bool {
+        if attempts.contains(where: { attempt in
+            attempt.pegs == guess.pegs
+        }) {
+            return true
+        }
+        return false
     }
     
     mutating func changeGuessPeg(at index: Int) {
