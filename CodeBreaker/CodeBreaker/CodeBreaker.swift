@@ -31,6 +31,12 @@ struct CodeBreaker {
         attempts.append(attempt)
     }
     
+    mutating func restart() {
+        masterCode.randomize(from: pegChoices)
+        guess.resetPegs()
+        attempts.removeAll()
+    }
+    
     func emptyAttempt() -> Bool {
         for index in guess.pegs.indices {
             if guess.pegs[index] != Code.missing {
@@ -81,6 +87,10 @@ struct Code {
         for index in pegChoices.indices {
             pegs[index] = pegChoices.randomElement() ?? Code.missing
         }
+    }
+    
+    mutating func resetPegs() {
+        pegs = Array(repeating: Code.missing, count: 4)
     }
     
     var matches: [Match] {

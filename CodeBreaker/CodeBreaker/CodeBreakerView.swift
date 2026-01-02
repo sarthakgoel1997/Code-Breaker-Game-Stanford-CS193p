@@ -19,6 +19,7 @@ struct CodeBreakerView: View {
                     view(for: game.attempts[index])
                 }
             }
+            restartButton
         }
         .padding()
     }
@@ -31,6 +32,15 @@ struct CodeBreakerView: View {
         }
         .font(.system(size: 80))
         .minimumScaleFactor(0.1)
+    }
+    
+    var restartButton: some View {
+        Button("Restart Game") {
+            withAnimation {
+                game.restart()
+            }
+        }
+        .font(.title2)
     }
     
     func view(for code: Code) -> some View {
