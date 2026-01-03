@@ -13,7 +13,7 @@ struct CodeBreaker {
     var masterCode: Code
     var guess: Code
     var attempts = [Code]()
-    let pegChoices: [Peg]
+    var pegChoices: [Peg]
     
     init(pegChoices: [Peg] = [.red, .green, .yellow, .blue]) {
         self.pegChoices = pegChoices
@@ -35,9 +35,16 @@ struct CodeBreaker {
     }
     
     mutating func restart() {
+        randomizePegChoices()
         masterCode.randomize(from: pegChoices)
-        guess.resetPegs()
+        guess.resetPegs(pegsCount: pegChoices.count)
         attempts.removeAll()
+    }
+    
+    mutating func randomizePegChoices() {
+        let count = Int.random(in: 3...6)
+        let availableColors: [Color] = [.red, .green, .yellow, .blue, .orange, .purple, .pink, .cyan]
+        pegChoices = Array(availableColors.shuffled().prefix(count))
     }
     
     func emptyAttempt() -> Bool {
@@ -92,13 +99,14 @@ struct Code {
     }
     
     mutating func randomize(from pegChoices: [Peg]) {
+        pegs = Array(repeating: Code.missing, count: pegChoices.count)
         for index in pegChoices.indices {
             pegs[index] = pegChoices.randomElement() ?? Code.missing
         }
     }
     
-    mutating func resetPegs() {
-        pegs = Array(repeating: Code.missing, count: pegs.count)
+    mutating func resetPegs(pegsCount: Int) {
+        pegs = Array(repeating: Code.missing, count: pegsCount)
     }
     
     var matches: [Match] {
