@@ -33,14 +33,21 @@ struct CodeBreaker {
     var guess: Code
     var attempts = [Code]()
     var pegChoices: [Peg]
+    var currentGame: GameType
     
-    static var currentGame: String = ""
+    static let availableColors: [String] = Array(supportedColors.keys)
+    static let availableEmojis: [String] = ["🙂", "📁", "🚀", "🔥", "😂", "🐕", "🚗", "⚽️"]
+    
+    enum GameType {
+        case color
+        case emoji
+    }
     
     init(pegChoices: [Peg] = ["red", "green", "yellow", "blue"]) {
         if let _ = pegChoices[0].pegColor {
-            CodeBreaker.currentGame = "color"
+            currentGame = .color
         } else {
-            CodeBreaker.currentGame = "emoji"
+            currentGame = .emoji
         }
         
         self.pegChoices = pegChoices
@@ -70,9 +77,15 @@ struct CodeBreaker {
     
     mutating func randomizePegChoices() {
         let count = Int.random(in: 3...6)
-        let availableColors: [String] = ["red", "green", "yellow", "blue", "orange", "purple", "pink", "cyan"]
-        pegChoices = Array(availableColors.shuffled().prefix(count))
-        CodeBreaker.currentGame = "color"
+        let colorGame = Bool.random()
+        
+        if colorGame {
+            currentGame = .color
+            pegChoices = Array(CodeBreaker.availableColors.shuffled().prefix(count))
+        } else {
+            currentGame = .emoji
+            pegChoices = Array(CodeBreaker.availableEmojis.shuffled().prefix(count))
+        }
     }
     
     func emptyAttempt() -> Bool {

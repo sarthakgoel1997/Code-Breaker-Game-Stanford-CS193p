@@ -62,23 +62,22 @@ struct CodeBreakerView: View {
     }
     
     func emoji(code: Code, index: Int) -> some View {
-        GeometryReader { geo in
-            Text(code.pegs[index])
-                .font(.system(size: geo.size.width * 0.8))
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .overlay {
-                    if(code.pegs[index] == Code.missing) {
-                        Circle()
-                            .stroke(Color.gray, lineWidth: 2)
-                    }
+        Text(code.pegs[index])
+            .font(.system(size: 120))
+            .minimumScaleFactor(9/120)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .overlay {
+                if(code.pegs[index] == Code.missing) {
+                    Circle()
+                        .stroke(Color.gray, lineWidth: 2)
                 }
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    if code.kind == .guess {
-                        game.changeGuessPeg(at: index)
-                    }
+            }
+            .contentShape(Rectangle())
+            .onTapGesture {
+                if code.kind == .guess {
+                    game.changeGuessPeg(at: index)
                 }
-        }
+            }
         .aspectRatio(1, contentMode: .fit)
     }
     
@@ -86,7 +85,7 @@ struct CodeBreakerView: View {
         HStack {
             ForEach(code.pegs.indices, id: \.self) { index in
                 
-                if CodeBreaker.currentGame == "color" {
+                if game.currentGame == .color {
                     coloredPeg(code: code, index: index)
                 } else {
                     emoji(code: code, index: index)
