@@ -88,7 +88,10 @@ struct CodeBreaker {
         randomizePegChoices()
         
         let newPegsCount = Int.random(in: 3...6)
+        
         masterCode.randomize(from: pegChoices, pegsCount: newPegsCount)
+        masterCode.kind = .master(isHidden: true)
+        
         guess.resetPegs(pegsCount: newPegsCount)
         attempts.removeAll()
         

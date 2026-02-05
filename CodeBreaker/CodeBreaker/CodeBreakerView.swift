@@ -49,6 +49,7 @@ struct CodeBreakerView: View {
         Button("Restart Game") {
             withAnimation {
                 game.restart()
+                selection = 0
             }
         }
         .font(.title2)
