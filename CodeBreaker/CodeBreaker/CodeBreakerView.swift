@@ -8,16 +8,26 @@
 import SwiftUI
 
 struct CodeBreakerView: View {
-    @State var game = CodeBreaker(pegChoices: ["🙂", "😂", "❤️", "📆", "📂"])
+    // MARK: Data Owned by Me
+    @State private var game = CodeBreaker(pegChoices: ["🙂", "😂", "❤️", "📆", "📂", "✅"])
+    @State private var selection: Int = 0
     
+    // MARK: - Body
     var body: some View {
         VStack {
             view(for: game.masterCode)
             ScrollView {
-                view(for: game.guess)
+                if !game.isOver {
+                    view(for: game.guess)
+                }
+                
                 ForEach(game.attempts.indices.reversed(), id: \.self) { index in
                     view(for: game.attempts[index])
                 }
+            }
+            PegChooser(choices: game.pegChoices, currentGame: game.currentGame) { peg in
+                game.setGuessPeg(peg, at: selection)
+                selection = (selection + 1) % game.masterCode.pegs.count
             }
             restartButton
         }
@@ -28,10 +38,11 @@ struct CodeBreakerView: View {
         Button("Guess") {
             withAnimation {
                 game.attemptGuess()
+                selection = 0
             }
         }
-        .font(.system(size: 80))
-        .minimumScaleFactor(0.1)
+        .font(.system(size: GuessButton.maximumFontSize))
+        .minimumScaleFactor(GuessButton.scaleFactor)
     }
     
     var restartButton: some View {
@@ -43,53 +54,9 @@ struct CodeBreakerView: View {
         .font(.title2)
     }
     
-    func coloredPeg(code: Code, index: Int) -> some View {
-        RoundedRectangle(cornerRadius: 10)
-            .overlay {
-                if code.pegs[index] == Code.missingPeg {
-                    RoundedRectangle(cornerRadius: 10)
-                        .strokeBorder(Color.gray)
-                }
-            }
-            .contentShape(Rectangle())
-            .aspectRatio(1, contentMode: .fit)
-            .foregroundStyle(code.pegs[index].pegColor ?? .clear)
-            .onTapGesture {
-                if code.kind == .guess {
-                    game.changeGuessPeg(at: index)
-                }
-            }
-    }
-    
-    func emoji(code: Code, index: Int) -> some View {
-        Text(code.pegs[index])
-            .font(.system(size: 120))
-            .minimumScaleFactor(9/120)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .overlay {
-                if(code.pegs[index] == Code.missingPeg) {
-                    Circle()
-                        .stroke(Color.gray, lineWidth: 2)
-                }
-            }
-            .contentShape(Rectangle())
-            .onTapGesture {
-                if code.kind == .guess {
-                    game.changeGuessPeg(at: index)
-                }
-            }
-        .aspectRatio(1, contentMode: .fit)
-    }
-    
     func view(for code: Code) -> some View {
         HStack {
-            ForEach(code.pegs.indices, id: \.self) { index in
-                if game.currentGame == .color {
-                    coloredPeg(code: code, index: index)
-                } else {
-                    emoji(code: code, index: index)
-                }
-            }
+            CodeView(code: code, gameType: game.currentGame, selection: $selection)
             
             Rectangle()
                 .foregroundStyle(.clear)
@@ -104,6 +71,18 @@ struct CodeBreakerView: View {
                     }
                 }
         }
+    }
+    
+    struct GuessButton {
+        static let minimumFontSize: CGFloat = 8
+        static let maximumFontSize: CGFloat = 80
+        static let scaleFactor: CGFloat = minimumFontSize / maximumFontSize
+    }
+}
+
+extension Color {
+    static func gray(_ brightness: CGFloat) -> Color {
+        return Color(hue: 148/360, saturation: 0, brightness: brightness)
     }
 }
 
