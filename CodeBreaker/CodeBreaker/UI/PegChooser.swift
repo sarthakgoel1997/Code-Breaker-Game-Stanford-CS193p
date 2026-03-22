@@ -24,7 +24,7 @@ struct PegChooser: View {
                 Button {
                     onChoose?(peg)
                 } label: {
-                    PegView(peg: peg, currentGame: currentGame)
+                    PegView(peg: peg, currentGame: currentGame, isHidden: false)
                 }
             }
         }

@@ -11,6 +11,7 @@ struct PegView: View {
     // MARK: Data In
     let peg: Peg
     let currentGame: CodeBreaker.GameType
+    let isHidden: Bool
     
     
     // MARK: - Body
@@ -20,6 +21,7 @@ struct PegView: View {
             .contentShape(Rectangle())
             .aspectRatio(1, contentMode: .fit)
             .foregroundStyle(peg.pegColor ?? .clear)
+            .opacity(isHidden ? 0 : 1)
     }
     
     func emoji() -> some View {
@@ -29,6 +31,7 @@ struct PegView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .contentShape(Rectangle())
             .aspectRatio(1, contentMode: .fit)
+            .opacity(isHidden ? 0 : 1)
     }
     
     var body: some View {
@@ -41,6 +44,6 @@ struct PegView: View {
 }
 
 #Preview {
-    PegView(peg: "blue", currentGame: .color)
+    PegView(peg: "blue", currentGame: .color, isHidden: false)
         .padding()
 }
