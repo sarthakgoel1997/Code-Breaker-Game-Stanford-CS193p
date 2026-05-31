@@ -8,11 +8,18 @@
 import SwiftUI
 
 struct ElapsedTime: View {
+    let startTime: Date
+    let endTime: Date?
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        if let endTime {
+            Text(endTime, format: .offset(to: startTime, allowedFields: [.minute, .second]))
+        } else {
+            Text(TimeDataSource<Date>.currentDate, format: .offset(to: startTime, allowedFields: [.minute, .second]))
+        }
     }
 }
-
-#Preview {
-    ElapsedTime()
-}
+//
+//#Preview {
+//    ElapsedTime()
+//}
