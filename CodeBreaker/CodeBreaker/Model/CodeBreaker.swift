@@ -34,6 +34,8 @@ struct CodeBreaker {
     var attempts = [Code]()
     var pegChoices: [Peg]
     var currentGame: GameType
+    var startTime: Date = Date.now
+    var endTime: Date?
     
     static let availableColors: [String] = Array(supportedColors.keys)
     static let availableEmojis: [String] = ["🙂", "📁", "🚀", "🔥", "😂", "🐕", "🚗", "⚽️"]
@@ -75,6 +77,7 @@ struct CodeBreaker {
         
         if isOver {
             masterCode.kind = .master(isHidden: false)
+            endTime = .now
         }
     }
     
@@ -93,6 +96,9 @@ struct CodeBreaker {
         
         guess.resetPegs(pegsCount: newPegsCount)
         attempts.removeAll()
+        
+        startTime = .now
+        endTime = nil
     }
     
     mutating func randomizePegChoices() {
