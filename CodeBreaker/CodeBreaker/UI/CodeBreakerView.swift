@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CodeBreakerView: View {
     // MARK: Data Shared with Me
-    @Binding var game: CodeBreaker
+    let game: CodeBreaker
     
     // MARK: Data Owned by Me
     @State private var selection: Int = 0
@@ -98,6 +98,6 @@ struct CodeBreakerView: View {
 #Preview {
     @Previewable @State var game = CodeBreaker(name: "Preview", pegChoices: ["blue", "red", "orange"])
     NavigationStack {
-        CodeBreakerView(game: $game)
+        CodeBreakerView(game: game)
     }
 }
