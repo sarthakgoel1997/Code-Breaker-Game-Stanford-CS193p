@@ -20,10 +20,10 @@ struct CodeBreakerView: View {
             restartButton
             
             CodeView(code: game.masterCode, gameType: game.currentGame) {
-                ElapsedTime(startTime: game.startTime, endTime: game.endTime)
-                    .flexibleSystemFont()
-                    .monospaced()
-                    .lineLimit(1)
+//                ElapsedTime(startTime: game.startTime, endTime: game.endTime)
+//                    .flexibleSystemFont()
+//                    .monospaced()
+//                    .lineLimit(1)
             }
             
             ScrollView {
@@ -35,11 +35,11 @@ struct CodeBreakerView: View {
                     .opacity(restarting ? 0 : 1)
                 }
                 
-                ForEach(game.attempts.indices.reversed(), id: \.self) { index in
-                    CodeView(code: game.attempts[index], gameType: game.currentGame) {
-                        let showMarkers = !hideMostRecentMarkers || index != game.attempts.count - 1
+                ForEach(game.attempts, id: \.pegs) { attempt in
+                    CodeView(code: attempt, gameType: game.currentGame) {
+                        let showMarkers = !hideMostRecentMarkers || attempt.pegs != game.attempts.first?.pegs
                         
-                        if showMarkers, let matches = game.attempts[index].matches {
+                        if showMarkers, let matches = attempt.matches {
                             MatchMarkers(matches: matches)
                         }
                     }
