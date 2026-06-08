@@ -19,7 +19,8 @@ let supportedColors: [String: Color] = [
     "pink": .pink,
     "purple": .purple,
     "brown": .brown,
-    "cyan": .cyan
+    "cyan": .cyan,
+    "indigo": .indigo,
 ]
 
 extension String {
@@ -29,6 +30,7 @@ extension String {
 }
 
 struct CodeBreaker {
+    var name: String
     var masterCode: Code
     var guess: Code
     var attempts = [Code]()
@@ -45,7 +47,8 @@ struct CodeBreaker {
         case emoji
     }
     
-    init(pegChoices: [Peg] = ["red", "green", "yellow", "blue"]) {
+    init(name: String = "Code Breaker", pegChoices: [Peg] = ["red", "green", "yellow", "blue"]) {
+        self.name = name
         if let _ = pegChoices[0].pegColor {
             currentGame = .color
         } else {

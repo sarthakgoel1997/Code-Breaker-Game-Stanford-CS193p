@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct CodeBreakerView: View {
+    // MARK: Data Shared with Me
+    @Binding var game: CodeBreaker
+    
     // MARK: Data Owned by Me
-    @State private var game = CodeBreaker(pegChoices: ["🙂", "😂", "❤️", "📆", "📂", "✅"])
     @State private var selection: Int = 0
     @State private var restarting = false
     @State private var hideMostRecentMarkers = false
@@ -17,14 +19,7 @@ struct CodeBreakerView: View {
     // MARK: - Body
     var body: some View {
         VStack {
-            restartButton
-            
-            CodeView(code: game.masterCode, gameType: game.currentGame) {
-//                ElapsedTime(startTime: game.startTime, endTime: game.endTime)
-//                    .flexibleSystemFont()
-//                    .monospaced()
-//                    .lineLimit(1)
-            }
+            CodeView(code: game.masterCode, gameType: game.currentGame)
             
             ScrollView {
                 if !game.isOver {
@@ -49,6 +44,17 @@ struct CodeBreakerView: View {
             if !game.isOver {
                 PegChooser(choices: game.pegChoices, currentGame: game.currentGame, onChoose: changePegAtSelection)
                     .transition(.pegChooser)
+            }
+        }
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                restartButton
+            }
+            
+            ToolbarItem {
+                ElapsedTime(startTime: game.startTime, endTime: game.endTime)
+                    .monospaced()
+                    .lineLimit(1)
             }
         }
         .padding()
@@ -90,5 +96,8 @@ struct CodeBreakerView: View {
 }
 
 #Preview {
-    CodeBreakerView()
+    @Previewable @State var game = CodeBreaker(name: "Preview", pegChoices: ["blue", "red", "orange"])
+    NavigationStack {
+        CodeBreakerView(game: $game)
+    }
 }
